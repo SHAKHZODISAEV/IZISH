@@ -1,0 +1,113 @@
+entity Users {
+    fullName String required,
+    phoneNumber String required,
+    educationLevel String,
+    skills String,
+    specialization String,
+    experienceYears Integer,
+    profilePhoto String,
+    videoPresentation String,
+    isVerified Boolean
+}
+
+entity Roles {
+    roleName String required
+}
+
+entity CandidateProfile {
+    resumeURL String,
+    summary String,
+    languages String
+}
+
+entity CandidateSkills {
+    skillName String required
+}
+
+entity CandidateExperience {
+    jobTitle String required,
+    companyName String,
+    years Integer
+}
+
+entity Jobs {
+    title String required,
+    description String,
+    category String,
+    salary Double,
+    workConditions String,
+    location String,
+    postedDate Instant,
+    expirationDate Instant
+}
+
+entity JobRequirements {
+    requirement String required
+}
+
+entity JobApplications {
+    applicationDate Instant,
+    status String
+}
+
+entity EmployerProfile {
+    companyName String required,
+    companyLogo String,
+    subscriptionKey String
+}
+
+entity CompanySpecialization {
+    specializationName String required
+}
+
+entity SearchFilters {
+    filterType String,
+    criteria String
+}
+
+entity SearchResults {
+    entityId Long
+}
+
+entity MiniCards {
+    entityType String,
+    matchedCriteria String
+}
+
+entity Logs {
+    action String required,
+    timestamp Instant
+}
+
+entity Notifications {
+    message String required,
+    status String
+}
+
+relationship OneToOne {
+    Users{role} to Roles
+    CandidateProfile{user} to Users
+    EmployerProfile{user} to Users
+}
+
+relationship ManyToOne {
+    Jobs{employer} to EmployerProfile
+    JobRequirements{job} to Jobs
+    JobApplications{job} to Jobs
+    JobApplications{candidate} to CandidateProfile
+}
+
+relationship ManyToMany {
+    CandidateProfile{skills(skillName)} to CandidateSkills{candidates}
+}
+
+relationship OneToMany {
+    EmployerProfile to Jobs{employer}
+}
+
+relationship OneToOne {
+    MiniCards{candidateProfile} to CandidateProfile
+    MiniCards{jobs} to Jobs
+    Logs{user} to Users
+    Notifications{user} to Users
+}
